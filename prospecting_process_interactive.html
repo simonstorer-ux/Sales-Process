@@ -1,0 +1,173 @@
+
+<style>
+  .pp-wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .pp-title { text-align: center; font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1.5rem; }
+  .pp-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+  .week-card { border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); overflow: hidden; background: var(--color-background-primary); }
+  .week-header { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; user-select: none; }
+  .week-header:hover { opacity: 0.88; }
+  .wh-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; flex-shrink: 0; }
+  .wh-text { flex: 1; }
+  .wh-num { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 2px; }
+  .wh-label { font-size: 15px; font-weight: 500; margin: 0; color: var(--color-text-primary); }
+  .wh-sub { font-size: 12px; color: var(--color-text-secondary); margin: 2px 0 0; }
+  .wh-chevron { font-size: 12px; color: var(--color-text-secondary); transition: transform .2s; }
+  .wh-chevron.open { transform: rotate(180deg); }
+  .week-body { display: none; padding: 0 16px 14px; }
+  .week-body.open { display: block; }
+  .day-item { padding: 10px 12px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); margin-bottom: 8px; }
+  .day-item:last-child { margin-bottom: 0; }
+  .day-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 4px; }
+  .day-text { font-size: 13px; color: var(--color-text-primary); margin: 0; line-height: 1.5; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 0 0 12px; }
+
+  .w1 .wh-icon { background: #B5D4F4; color: #0C447C; }
+  .w1 .wh-num { color: #185FA5; }
+  .w2 .wh-icon { background: #9FE1CB; color: #085041; }
+  .w2 .wh-num { color: #0F6E56; }
+  .w3 .wh-icon { background: #C0DD97; color: #27500A; }
+  .w3 .wh-num { color: #3B6D11; }
+  .w4 .wh-icon { background: #FAC775; color: #633806; }
+  .w4 .wh-num { color: #854F0B; }
+  .w5 .wh-icon { background: #F5C4B3; color: #712B13; }
+  .w5 .wh-num { color: #993C1D; }
+  .w6 .wh-icon { background: #F4C0D1; color: #72243E; }
+  .w6 .wh-num { color: #993556; }
+
+  .w1 .day-label { color: #185FA5; }
+  .w2 .day-label { color: #0F6E56; }
+  .w3 .day-label { color: #3B6D11; }
+  .w4 .day-label { color: #854F0B; }
+  .w5 .day-label { color: #993C1D; }
+  .w6 .day-label { color: #993556; }
+
+  @media (max-width: 560px) { .pp-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="pp-wrap">
+  <h2 class="sr-only">Six-week prospecting process with expandable weekly breakdowns</h2>
+  <p class="pp-title">Prospecting Process</p>
+
+  <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:12px;">
+    <button onclick="toggleAll(true)" style="font-size:12px;padding:4px 10px;">Expand all</button>
+    <button onclick="toggleAll(false)" style="font-size:12px;padding:4px 10px;">Collapse all</button>
+  </div>
+
+  <div class="pp-grid" id="grid"></div>
+</div>
+
+<script>
+const weeks = [
+  {
+    cls: "w1",
+    num: "Week 1",
+    label: "Initial Reach Out",
+    sub: "Make your first impression",
+    icon: "1",
+    days: [
+      { label: "Mon — Day 1", text: "Send an initial outreach email introducing who you are, why you're reaching out, and a value-add specific to the prospect's buyer persona." },
+      { label: "Wed — Day 3", text: "Follow-up phone call. If no answer, leave a short and friendly voicemail referencing your earlier email." },
+      { label: "Fri — Day 5", text: "Send a LinkedIn connection request with a personalized note mentioning your email or voicemail to reinforce the relationship." }
+    ]
+  },
+  {
+    cls: "w2",
+    num: "Week 2",
+    label: "Provide Value",
+    sub: "Educate and engage",
+    icon: "2",
+    days: [
+      { label: "Tue — Day 2", text: "Follow up your initial email with additional info or useful resources such as relevant articles or white papers aligned to their interests." },
+      { label: "Wed — Day 3", text: "Social media engagement — like or comment on one of the prospect's recent posts if they're active on LinkedIn." },
+      { label: "Thu — Day 4", text: "Short check-in call. If there's still no response, reference that you'll reach out again next week to stay top of mind." }
+    ]
+  },
+  {
+    cls: "w3",
+    num: "Week 3",
+    label: "Building a Connection",
+    sub: "Personalize & deepen the relationship",
+    icon: "3",
+    days: [
+      { label: "Wed — Day 3", text: "Send a pro-market candidate profile and mention current market trends and how you help other clients navigate them — positioning yourself as a trusted advisor." },
+      { label: "Thu — Day 4", text: "Send a quick text message or LinkedIn message referencing the pro-market candidate profile you shared to reinforce the conversation." }
+    ]
+  },
+  {
+    cls: "w4",
+    num: "Week 4",
+    label: "Personal Engagement",
+    sub: "Warm outreach & live contact",
+    icon: "4",
+    days: [
+      { label: "Mon — Day 1", text: "Send a friendly 'just checking in' email, inviting the prospect to share any questions they may have about your services or the market." },
+      { label: "Fri — Day 5", text: "Make a quick call and leave a simple voicemail that refers back to your previous messages and the pro-market candidate profile you shared." }
+    ]
+  },
+  {
+    cls: "w5",
+    num: "Week 5",
+    label: "Offer Resources",
+    sub: "Demonstrate expertise",
+    icon: "5",
+    days: [
+      { label: "Tue — Day 2", text: "Email reply to the pro-market candidate profile — add your commentary, insights, or a gentle nudge to gauge their interest level." },
+      { label: "Thu — Day 4", text: "Follow-up call to see if they had a chance to review your email from Tuesday. Keep it brief and conversational." }
+    ]
+  },
+  {
+    cls: "w6",
+    num: "Week 6",
+    label: "Final Push / Closing",
+    sub: "Wrap up or leave the door open",
+    icon: "6",
+    days: [
+      { label: "Mon — Day 1", text: "Send a summary email articulating exactly how you can add specific value to their buyer persona and business — make the case clearly." },
+      { label: "Wed — Day 3", text: "Send a short LinkedIn message expressing that you'd love to connect whenever they're available — low pressure, relationship-focused." },
+      { label: "Fri — Day 5", text: "Final call. Leave a friendly 'backing off' voicemail reiterating your open-door policy for future needs, and politely ask if they know anyone who could benefit from an introduction." }
+    ]
+  }
+];
+
+function buildCard(w, i) {
+  const id = "body-" + i;
+  return `
+  <div class="week-card ${w.cls}">
+    <div class="week-header" onclick="toggle('${id}', this)">
+      <div class="wh-icon">${w.icon}</div>
+      <div class="wh-text">
+        <p class="wh-num">${w.num}</p>
+        <p class="wh-label">${w.label}</p>
+        <p class="wh-sub">${w.sub}</p>
+      </div>
+      <span class="wh-chevron" id="chev-${id}">▼</span>
+    </div>
+    <div class="week-body" id="${id}">
+      <div class="divider"></div>
+      ${w.days.map(d => `
+      <div class="day-item">
+        <p class="day-label">${d.label}</p>
+        <p class="day-text">${d.text}</p>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+document.getElementById("grid").innerHTML = weeks.map((w,i) => buildCard(w,i)).join("");
+
+function toggle(id, header) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById("chev-" + id);
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  chev.classList.toggle("open", !isOpen);
+}
+
+function toggleAll(open) {
+  weeks.forEach((_, i) => {
+    const id = "body-" + i;
+    document.getElementById(id).classList.toggle("open", open);
+    document.getElementById("chev-" + id).classList.toggle("open", open);
+  });
+}
+</script>
