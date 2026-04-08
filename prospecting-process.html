@@ -6,192 +6,60 @@
 <title>Prospecting Process</title>
 
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #0d1b2a;
-  color: #f0f4f8;
-  min-height: 100vh;
-  padding: 2rem 1.5rem 3rem;
-}
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1b2a;
+    color: #f0f4f8;
+    min-height: 100vh;
+    padding: 2rem 1.5rem 3rem;
+  }
 
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
 
-.subtitle {
-  text-align: center;
-  font-size: 0.95rem;
-  color: #8fa3b8;
-  margin-bottom: 2rem;
-}
+  .subtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #8fa3b8;
+    margin-bottom: 2rem;
+  }
 
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 2rem;
-}
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
 
-.controls button {
-  background: transparent;
-  border: 1px solid #2e4a63;
-  color: #8fa3b8;
-  padding: 6px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-}
+  .controls button {
+    background: transparent;
+    border: 1px solid #2e4a63;
+    color: #8fa3b8;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
 
-@media (max-width: 750px) { .grid { grid-template-columns: 1fr; } }
-@media (min-width: 751px) and (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 750px) { .grid { grid-template-columns: 1fr; } }
+  @media (min-width: 751px) and (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
-.week-card {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: #142233;
-}
-
-.week-header {
-  padding: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.wh-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.wh-text { flex: 1; }
-.wh-week { font-size: 11px; font-weight: 600; text-transform: uppercase; }
-.wh-label { font-size: 15px; font-weight: 600; }
-.wh-sub { font-size: 12px; color: #6e8ca8; }
-
-.chevron {
-  font-size: 11px;
-  transition: transform 0.25s;
-}
-.chevron.open { transform: rotate(180deg); }
-
-.week-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease;
-}
-.week-body.open { max-height: 1000px; }
-
-.body-inner { padding: 0 16px 16px; }
-
-.day-item {
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 9px;
-}
-
-.w1 .wh-icon { background:#1a4a7a;color:#7ab8f5 }
-.w2 .wh-icon { background:#0f4a3a;color:#5dd4aa }
-.w3 .wh-icon { background:#2a4a10;color:#a0d455 }
-.w4 .wh-icon { background:#4a3200;color:#f5b840 }
-.w5 .wh-icon { background:#4a2010;color:#f0845a }
-.w6 .wh-icon { background:#4a1030;color:#f075a8 }
-</style>
-</head>
-
-<body>
-
-<h1>Prospecting Process</h1>
-<p class="subtitle">A 6-week outreach framework — click each week to expand</p>
-
-<div class="controls">
-  <button onclick="toggleAll(true)">Expand all</button>
-  <button onclick="toggleAll(false)">Collapse all</button>
-</div>
-
-<div class="grid" id="grid"></div>
-
-<script>
-const weeks = [
-  { cls:"w1", num:"Week 1", label:"Initial Reach Out", sub:"Make your first impression", icon:"1",
-    days:[{label:"Mon","text":"Initial email" }]},
-  { cls:"w2", num:"Week 2", label:"Provide Value", sub:"Educate and engage", icon:"2",
-    days:[{label:"Tue","text":"Value follow‑up" }]},
-  { cls:"w3", num:"Week 3", label:"Connection", sub:"Personalize", icon:"3",
-    days:[{label:"Wed","text":"Market insight" }]},
-  { cls:"w4", num:"Week 4", label:"Engagement", sub:"Live contact", icon:"4",
-    days:[{label:"Mon","text":"Friendly touch" }]},
-  { cls:"w5", num:"Week 5", label:"Resources", sub:"Expertise", icon:"5",
-    days:[{label:"Tue","text":"Insight email" }]},
-  { cls:"w6", num:"Week 6", label:"Closing", sub:"Wrap up", icon:"6",
-    days:[{label:"Fri","text":"Final outreach" }]}
-];
-
-function buildCard(w, i) {
-  return `
-  <div class="week-card ${w.cls}">
-    <div class="week-header" onclick="toggleOne(${i})">
-      <div class="wh-icon">${w.icon}</div>
-      <div class="wh-text">
-        <div class="wh-week">${w.num}</div>
-        <div class="wh-label">${w.label}</div>
-        <div class="wh-sub">${w.sub}</div>
-      </div>
-      <span class="chevron" id="chev-${i}">▼</span>
-    </div>
-    <div class="week-body" id="body-${i}">
-      <div class="body-inner">
-        ${w.days.map(d => `
-          <div class="day-item"><strong>${d.label}</strong><br>${d.text}</div>
-        `).join("")}
-      </div>
-    </div>
-  </div>`;
-}
-
-grid.innerHTML = weeks.map(buildCard).join("");
-
-function toggleOne(index) {
-  weeks.forEach((_, i) => {
-    const body = document.getElementById("body-" + i);
-    const chev = document.getElementById("chev-" + i);
-    const isTarget = i === index;
-    const isOpen = body.classList.contains("open");
-
-    body.classList.toggle("open", isTarget && !isOpen);
-    chev.classList.toggle("open", isTarget && !isOpen);
-  });
-}
-
-function toggleAll(open) {
-  weeks.forEach((_, i) => {
-    document.getElementById("body-" + i).classList.toggle("open", open);
-    document.getElementById("chev-" + i).classList.toggle("open", open);
-  });
-}
-</script>
-
-</body>
-</html>
-``
+  .week-card {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
